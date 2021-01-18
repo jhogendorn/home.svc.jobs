@@ -16,17 +16,19 @@ set -eu         # -e If a command fails, stop execution
                 # -u Fail if we try to expand unset variables
 set -o pipefail # Fail even on pipes
 
+source $BASEPATH/.env
+source $SCRIPTPATH/.env
+
 _fail () {
-  curl -s https://healthchecks.svc.home/ping/69c49b7d-9a1c-4c94-bb63-2ce9ca62d790/fail
+  curl -s $HEALTHCHECK_URL/fail
   exit
 }
 trap _fail ERR
 
-source $BASEPATH/.env
 
 echo "Init Backup Exec"
 
-curl -s https://healthchecks.svc.home/ping/69c49b7d-9a1c-4c94-bb63-2ce9ca62d790/start
+curl -s $HEALTHCHECK_URL/start
 
 n=0
 until [ "$n" -ge 5 ]
@@ -37,4 +39,4 @@ do
    sleep 15
 done
 
-curl -s https://healthchecks.svc.home/ping/69c49b7d-9a1c-4c94-bb63-2ce9ca62d790
+curl -s $HEALTHCHECK_URL
