@@ -22,6 +22,8 @@ _fail () {
 }
 trap _fail ERR
 
+source $BASEPATH/.env
+
 echo "Init Backup Exec"
 
 curl -s https://healthchecks.svc.home/ping/69c49b7d-9a1c-4c94-bb63-2ce9ca62d790/start
@@ -30,7 +32,7 @@ n=0
 until [ "$n" -ge 5 ]
 do
    echo "Attempt Backup #$n"
-   aws s3 sync /srv s3://jhogendorn-backup-29c.proto/srv --delete && break
+   aws s3 sync /srv s3://$BACKUP_BUCKET/srv --delete && break
    n=$((n+1)) 
    sleep 15
 done
